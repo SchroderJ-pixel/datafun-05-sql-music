@@ -1,22 +1,17 @@
-import sqlite3
-import pathlib
+-- Create the authors table
+CREATE TABLE authors (
+    author_id TEXT PRIMARY KEY, -- Prefixed sequential ID as the primary key (e.g., AUTHOR_001)
+    name TEXT NOT NULL,         -- Author's name (mandatory field)
+    birth_year INTEGER,         -- Year of birth (optional)
+    nationality TEXT            -- Nationality of the author (optional)
+);
 
-def create_tables(db_file):
-    """Function to read and execute SQL statements to create tables"""
-    try:
-        with sqlite3.connect(db_file) as conn:
-            sql_file = pathlib.Path("sql_create", "01_drop_tables.sql")
-            with open(sql_file, "r") as file:
-                sql_script = file.read()
-            conn.executescript(sql_script)
-            print("Tables created successfully.")
-    except sqlite3.Error as e:
-        print("Error creating tables:", e)
-
-def main():
-    db_file = "C:/Projects/datafun-05/datafun-05-sql/database.db"
-    create_tables(db_file)
-
-# Run the main function if this script is called directly
-if __name__ == "__main__":
-    main()
+-- Create the books table
+CREATE TABLE books (
+    book_id TEXT PRIMARY KEY,   -- Prefixed sequential ID as the primary key (e.g., BOOK_001)
+    title TEXT NOT NULL,        -- Book title (mandatory field)
+    genre TEXT,                 -- Book genre (optional)
+    publication_year INTEGER,   -- Year of publication (optional)
+    author_id TEXT,             -- Foreign key linking to authors
+    FOREIGN KEY (author_id) REFERENCES authors (author_id) -- Relationship with authors
+);
