@@ -1,3 +1,17 @@
+'''
+This Python script requires an external dependency (pandas),
+so we'll need a project virtual environment.
+
+Note: pandas now requires pyarrow to be installed as well.
+
+For Windows, my commands are:
+
+py -m venv .venv
+.venv\Scripts\Activate
+py -m pip install pandas pyarrow
+py book_manager.py
+'''
+
 # Import from Python Standard Library first
 import sqlite3
 import pathlib
@@ -10,6 +24,7 @@ db_file_path = pathlib.Path("project.db")
 sql_file_path = pathlib.Path("sql").joinpath("create_tables.sql")
 author_data_path = pathlib.Path("data").joinpath("authors.csv")
 book_data_path = pathlib.Path("data").joinpath("books.csv")
+
 
 def verify_and_create_folders(paths):
     """Verify and create folders if they don't exist."""
@@ -55,8 +70,8 @@ def insert_data_from_csv(db_path, author_data_path, book_data_path):
 
 def main():
     paths_to_verify = [sql_file_path, author_data_path, book_data_path]
-    verify_and_create_folders(paths_to_verify)   
-
+    verify_and_create_folders(paths_to_verify)
+    
     create_database(db_file_path)
     create_tables(db_file_path, sql_file_path)
     insert_data_from_csv(db_file_path, author_data_path, book_data_path)
