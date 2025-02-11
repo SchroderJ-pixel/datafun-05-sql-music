@@ -1,12 +1,12 @@
 -- Insert artists into the artists table
-INSERT INTO artists (name, total_plays) 
+INSERT INTO artists (name, TotalPlays) 
 VALUES
 ('Chappell Roan', 8000),
 ('Surfaces', 7000),
 ('Teddy Swims', 700);
 
 -- Insert songs into the songs table
-INSERT INTO songs (title, artist_name, total_plays)
+INSERT INTO songs (title, Artist, TotalPlays)
 VALUES
 ('Pink Pony Club', 'Chappell Roan', 4000),
 ('HOT TO GO!', 'Chappell Roan', 3000),
@@ -15,9 +15,3 @@ VALUES
 ('Sunday Best', 'Surfaces', 2000),
 ('Guilty', 'Teddy Swims', 500),
 ('The Door', 'Teddy Swims', 20);
-
--- Query to check the insertion and link the songs to artists
-SELECT songs.title, artists.name, songs.total_plays
-FROM songs
-JOIN artists ON songs.artist_name = artists.name;
-

@@ -1,8 +1,6 @@
 import sqlite3
-import os
 import pathlib
 import pandas as pd
-import sys
 from utils_logger import logger  # Import the logger
 
 def execute_sql_file(connection, file_path: pathlib.Path) -> None:
@@ -30,19 +28,19 @@ def execute_sql_file(connection, file_path: pathlib.Path) -> None:
         logger.error(f"Failed to execute {file_path}: {e}")
         raise
 
-def insert_data_from_csv(db_path: pathlib.Path, author_csv: pathlib.Path, book_csv: pathlib.Path) -> None:
+def insert_data_from_csv(db_path: pathlib.Path, artists_csv: pathlib.Path, songs_csv: pathlib.Path) -> None:
     """
     Reads CSV files using pandas and inserts data into the database.
-    This replaces any existing data in the 'authors' and 'books' tables.
+    This replaces any existing data in the 'artists' and 'songs' tables.
     """
     try:
         # Read CSV files using pandas
-        authors_df = pd.read_csv(author_csv)
-        books_df = pd.read_csv(book_csv)
+        artists_df = pd.read_csv(artists_csv)
+        songs_df = pd.read_csv(songs_csv)
         # Write data to the database, replacing any existing data
         with sqlite3.connect(db_path) as conn:
-            authors_df.to_sql("authors", conn, if_exists="replace", index=False)
-            books_df.to_sql("books", conn, if_exists="replace", index=False)
+            artists_df.to_sql("artists", conn, if_exists="replace", index=False)
+            songs_df.to_sql("songs", conn, if_exists="replace", index=False)
         logger.info("CSV data inserted successfully.")
     except Exception as e:
         logger.error(f"Error inserting CSV data: {e}")
@@ -55,12 +53,12 @@ def main() -> None:
     # Define path variables
     ROOT_DIR = pathlib.Path(__file__).parent.resolve()
     SQL_CREATE_FOLDER = ROOT_DIR.joinpath("sql_create")
-    DATA_FOLDER = ROOT_DIR.joinpath("data")
-    DB_PATH = DATA_FOLDER.joinpath('db.sqlite')
+    DATA_FOLDER = ROOT_DIR.joinpath("data-05-sql-music")  # Set to your original data folder
+    DB_PATH = DATA_FOLDER.joinpath('music_project.db')  # Path to your music database in the original folder
     
     # Define CSV file paths (ensure these CSVs have the correct headers)
-    AUTHOR_CSV = DATA_FOLDER.joinpath("authors.csv")
-    BOOK_CSV = DATA_FOLDER.joinpath("books.csv")
+    ARTISTS_CSV = ROOT_DIR.joinpath("data-05-sql-music", "artists.csv")  # Path to artists CSV
+    SONGS_CSV = ROOT_DIR.joinpath("data-05-sql-music", "songs.csv")      # Path to songs CSV
     
     # Ensure the data folder exists
     DATA_FOLDER.mkdir(exist_ok=True)
@@ -79,7 +77,7 @@ def main() -> None:
         connection.close()  # Close connection before CSV import
         
         # Insert data from CSV files to populate the database with your CSV headers
-        insert_data_from_csv(DB_PATH, AUTHOR_CSV, BOOK_CSV)
+        insert_data_from_csv(DB_PATH, ARTISTS_CSV, SONGS_CSV)
         
         logger.info("Database setup and CSV data import completed successfully.")
     except Exception as e:
@@ -93,3 +91,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
