@@ -21,7 +21,7 @@ import pandas as pd
 
 # Define paths using joinpath
 db_file_path = pathlib.Path("music_project.db")
-sql_file_path = pathlib.Path("sql").joinpath("create_tables.sql")
+sql_file_path = pathlib.Path("sql_create").joinpath("02_create_tables.sql")  # Corrected path
 artists_data_path = pathlib.Path("data-music").joinpath("artists.csv")  # Updated path
 song_data_path = pathlib.Path("data-music").joinpath("songs.csv")  # Updated path
 
@@ -61,6 +61,8 @@ def insert_data_from_csv(db_path, artists_data_path, song_data_path):
     try:
         artists_df = pd.read_csv(artists_data_path)
         songs_df = pd.read_csv(song_data_path)
+        
+        # Insert new data into the tables
         with sqlite3.connect(db_path) as conn:
             artists_df.to_sql("artists", conn, if_exists="replace", index=False)
             songs_df.to_sql("songs", conn, if_exists="replace", index=False)
