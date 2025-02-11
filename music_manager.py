@@ -9,7 +9,7 @@ For Windows, my commands are:
 py -m venv .venv
 .venv\Scripts\Activate
 py -m pip install pandas pyarrow
-py book_manager.py
+py music_manager.py
 '''
 
 # Import from Python Standard Library first
@@ -20,10 +20,10 @@ import pathlib
 import pandas as pd
 
 # Define paths using joinpath
-db_file_path = pathlib.Path("project.db")
+db_file_path = pathlib.Path("music_project.db")
 sql_file_path = pathlib.Path("sql").joinpath("create_tables.sql")
-author_data_path = pathlib.Path("data").joinpath("authors.csv")
-book_data_path = pathlib.Path("data").joinpath("books.csv")
+artists_data_path = pathlib.Path("data-music").joinpath("artists.csv")  # Updated path
+song_data_path = pathlib.Path("data-music").joinpath("songs.csv")  # Updated path
 
 
 def verify_and_create_folders(paths):
@@ -56,25 +56,25 @@ def create_tables(db_path, sql_file_path):
     except sqlite3.Error as e:
         print(f"Error creating tables: {e}")
 
-def insert_data_from_csv(db_path, author_data_path, book_data_path):
+def insert_data_from_csv(db_path, artists_data_path, song_data_path):
     """Read data from CSV files and insert the records into their respective tables."""
     try:
-        authors_df = pd.read_csv(author_data_path)
-        books_df = pd.read_csv(book_data_path)
+        artists_df = pd.read_csv(artists_data_path)
+        songs_df = pd.read_csv(song_data_path)
         with sqlite3.connect(db_path) as conn:
-            authors_df.to_sql("authors", conn, if_exists="replace", index=False)
-            books_df.to_sql("books", conn, if_exists="replace", index=False)
+            artists_df.to_sql("artists", conn, if_exists="replace", index=False)
+            songs_df.to_sql("songs", conn, if_exists="replace", index=False)
             print("Data inserted successfully.")
     except (sqlite3.Error, pd.errors.EmptyDataError, FileNotFoundError) as e:
         print(f"Error inserting data: {e}")
 
 def main():
-    paths_to_verify = [sql_file_path, author_data_path, book_data_path]
+    paths_to_verify = [sql_file_path, artists_data_path, song_data_path]
     verify_and_create_folders(paths_to_verify)
     
     create_database(db_file_path)
     create_tables(db_file_path, sql_file_path)
-    insert_data_from_csv(db_file_path, author_data_path, book_data_path)
+    insert_data_from_csv(db_file_path, artists_data_path, song_data_path)
 
 if __name__ == "__main__":
     main()

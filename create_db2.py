@@ -32,25 +32,27 @@ CREATE TABLE IF NOT EXISTS songs (
 # Add the 'id' column to the artists DataFrame to simulate the artist ID
 artists_df['id'] = range(1, len(artists_df) + 1)
 
-# Step 3: Insert the artists data into the database
+# Step 3: Insert the artists data into the database, avoiding duplicates
 for index, row in artists_df.iterrows():
     cursor.execute('''
-    INSERT INTO artists (id, name, total_plays)
+    INSERT OR IGNORE INTO artists (id, name, total_plays)
     VALUES (?, ?, ?)
     ''', (row['id'], row['Name'], row['TotalPlays']))
 
 # Step 4: Create a dictionary mapping artist names to artist IDs
 artist_dict = pd.Series(artists_df.id.values, index=artists_df.Name).to_dict()
 
-# Step 5: Add the 'artist_id' column to the songs DataFrame
+# Step 5: Add the 'artist_id' column to the songs DataFrame using the artist_dict mapping
 songs_df['artist_id'] = songs_df['Artist'].map(artist_dict)
 
-# Step 6: Insert the songs data into the database
+# Step 6: Insert the songs data into the database, avoiding duplicates
 for index, row in songs_df.iterrows():
-    cursor.execute('''
-    INSERT INTO songs (title, artist_id, total_plays)
-    VALUES (?, ?, ?)
-    ''', (row['Title'], row['artist_id'], row['TotalPlays']))
+    # Check if the artist_id exists in the database before inserting
+    if pd.notnull(row['artist_id']):
+        cursor.execute('''
+        INSERT OR IGNORE INTO songs (title, artist_id, total_plays)
+        VALUES (?, ?, ?)
+        ''', (row['Title'], row['artist_id'], row['TotalPlays']))
 
 # Commit the changes
 conn.commit()
