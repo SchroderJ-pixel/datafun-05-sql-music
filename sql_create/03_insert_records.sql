@@ -15,3 +15,9 @@ VALUES
 ('Sunday Best', 'Surfaces', 2000),
 ('Guilty', 'Teddy Swims', 500),
 ('The Door', 'Teddy Swims', 20);
+
+-- Update Queen to Queen (Freddie Mercury)
+UPDATE artists
+SET name = 'Queen (Freddie Mercury)'
+WHERE name = 'Queen';
+
