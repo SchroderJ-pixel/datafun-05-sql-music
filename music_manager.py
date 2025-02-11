@@ -60,7 +60,7 @@ def aggregation_sql(db_path, sql_file_path):
 
             # Display the result
             if not result_df.empty:
-                print("Average Total Plays:", result_df.iloc[0, 0])
+                print("\nAverage Total Plays:", result_df.iloc[0, 0])
             else:
                 print("No data to aggregate.")
     except sqlite3.Error as e:
@@ -75,7 +75,58 @@ def query_filter_sql(db_path, sql_query_file_path):
             
             # Execute the query and load the result into a DataFrame
             result_df = pd.read_sql_query(sql_script, conn)
-            print("Query executed successfully. Filtered results:")
+            print("\nQuery executed successfully. Filtered results:")
+            print(result_df)
+    
+    except sqlite3.Error as e:
+        print(f"Error executing filter query: {e}")
+    except pd.errors.DatabaseError as e:
+        print(f"Error executing query: {e}")
+
+def query_sorting_sql(db_path, sql_query_file_path):
+    """Execute SQL query from a file with sorting conditions."""
+    try:
+        with sqlite3.connect(db_path) as conn:
+            with open(sql_query_file_path, "r") as file:
+                sql_script = file.read()
+            
+            # Execute the query and load the result into a DataFrame
+            result_df = pd.read_sql_query(sql_script, conn)
+            print("\nQuery executed successfully. Sorted results Greatest to Least:")
+            print(result_df)
+    
+    except sqlite3.Error as e:
+        print(f"Error executing filter query: {e}")
+    except pd.errors.DatabaseError as e:
+        print(f"Error executing query: {e}")
+
+def query_grouping_sql(db_path, sql_query_file_path):
+    """Execute SQL query from a file with grouping conditions."""
+    try:
+        with sqlite3.connect(db_path) as conn:
+            with open(sql_query_file_path, "r") as file:
+                sql_script = file.read()
+            
+            # Execute the query and load the result into a DataFrame
+            result_df = pd.read_sql_query(sql_script, conn)
+            print("\nQuery executed successfully. Songs grouped by artists:")
+            print(result_df)
+    
+    except sqlite3.Error as e:
+        print(f"Error executing filter query: {e}")
+    except pd.errors.DatabaseError as e:
+        print(f"Error executing query: {e}")
+
+def query_join_sql(db_path, sql_query_file_path):
+    """Execute SQL query from a file with joining conditions."""
+    try:
+        with sqlite3.connect(db_path) as conn:
+            with open(sql_query_file_path, "r") as file:
+                sql_script = file.read()
+            
+            # Execute the query and load the result into a DataFrame
+            result_df = pd.read_sql_query(sql_script, conn)
+            print("\nQuery executed successfully. Songs joined by artists:")
             print(result_df)
     
     except sqlite3.Error as e:
@@ -121,6 +172,15 @@ def main():
 
     # Step 5: Execute filter query
     query_filter_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_filter.sql")
+
+    # Step 6: Run sorting query
+    query_sorting_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_sorting.sql")
+
+    # Step 7: Run group by query (grouping by artist_name)
+    query_grouping_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_group_by.sql")
+
+    # Step 8: Run join query (INNER JOIN on artist_name)
+    query_join_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_join.sql")
 
 if __name__ == "__main__":
     main()

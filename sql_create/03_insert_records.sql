@@ -9,11 +9,11 @@ VALUES
 INSERT INTO songs (title, Artist, TotalPlays)
 VALUES
 ('Pink Pony Club', 'Chappell Roan', 4000),
-('HOT TO GO!', 'Chappell Roan', 3000),
-('Good Luck, Babe!', 'Chappell Roan', 1000),
 ('Wave of You', 'Surfaces', 5000),
-('Sunday Best', 'Surfaces', 2000),
+('HOT TO GO!', 'Chappell Roan', 3000),
 ('Guilty', 'Teddy Swims', 500),
+('Good Luck, Babe!', 'Chappell Roan', 1000),
+('Sunday Best', 'Surfaces', 2000),
 ('The Door', 'Teddy Swims', 20);
 
 -- Update Queen to Queen (Freddie Mercury)
