@@ -29,7 +29,7 @@ def create_database(db_path):
         print(f"Error creating the database: {e}")
 
 def create_tables(db_path, sql_file_path):
-    """Read and execute SQL statements to create tables."""
+    """Read and execute SQL statements to create tables."""  
     try:
         with sqlite3.connect(db_path) as conn:
             with open(sql_file_path, "r") as file:
@@ -49,6 +49,40 @@ def insert_data_from_sql(db_path, sql_insert_file_path):
             print("Records inserted from SQL script.")
     except sqlite3.Error as e:
         print(f"Error inserting records from SQL file: {e}")
+
+def aggregation_sql(db_path, sql_file_path):
+    """Execute SQL aggregation query from a file to calculate the average."""
+    try:
+        with sqlite3.connect(db_path) as conn:
+            # Read and execute SQL aggregation query
+            sql_script = "SELECT AVG(TotalPlays) AS avg_total_plays FROM artists;"
+            result_df = pd.read_sql_query(sql_script, conn)
+
+            # Display the result
+            if not result_df.empty:
+                print("Average Total Plays:", result_df.iloc[0, 0])
+            else:
+                print("No data to aggregate.")
+    except sqlite3.Error as e:
+        print(f"Error aggregating from SQL file: {e}")
+
+def query_filter_sql(db_path, sql_query_file_path):
+    """Execute SQL query from a file with filtering conditions."""
+    try:
+        with sqlite3.connect(db_path) as conn:
+            with open(sql_query_file_path, "r") as file:
+                sql_script = file.read()
+            
+            # Execute the query and load the result into a DataFrame
+            result_df = pd.read_sql_query(sql_script, conn)
+            print("Query executed successfully. Filtered results:")
+            print(result_df)
+    
+    except sqlite3.Error as e:
+        print(f"Error executing filter query: {e}")
+    except pd.errors.DatabaseError as e:
+        print(f"Error executing query: {e}")
+
 
 def insert_data_from_csv(db_path, artists_data_path, song_data_path):
     """Read data from CSV files and insert the records into their respective tables."""
@@ -82,7 +116,11 @@ def main():
     # Step 3: Insert additional records from SQL script
     insert_data_from_sql(db_file_path, sql_insert_file_path)
 
+    # Step 4: Run aggregation to find the average total plays
+    aggregation_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_aggregation.sql")
+
+    # Step 5: Execute filter query
+    query_filter_sql(db_file_path, "C:/Projects/datafun-05/datafun-05-sql-music/sql_queries/query_filter.sql")
+
 if __name__ == "__main__":
     main()
-
-
