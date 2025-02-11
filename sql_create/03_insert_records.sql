@@ -21,3 +21,7 @@ UPDATE artists
 SET name = 'Queen (Freddie Mercury)'
 WHERE name = 'Queen';
 
+
+-- Now delete the artist
+DELETE FROM artists WHERE name = 'Michael Jackson';
+
